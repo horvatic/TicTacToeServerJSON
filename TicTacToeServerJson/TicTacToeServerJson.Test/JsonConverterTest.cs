@@ -14,7 +14,7 @@ namespace TicTacToeServerJson.Test
         }
 
         [Fact]
-        public void Deserialize_Json()
+        public void DeserializeTicTacToeBox_Json()
         {
             var exampleList = new List<string>
             {
@@ -31,14 +31,14 @@ namespace TicTacToeServerJson.Test
 
             var data = GetJsonData();
             var converter = new JsonConverter();
-            var ticTacToe = converter.Deserialize(data);
+            var ticTacToe = converter.DeserializeTicTacToeBox(data);
             for (var i = 0; i < ticTacToe.cellCount(); i++)
                 Assert.Equal(exampleList[i],
                     ticTacToe.getGlyphAtLocation(i));
         }
 
         [Fact]
-        public void Serialize_Json()
+        public void SerializeTicTacToeBox_Json()
         {
             var ticTacToeBox =
                 new TicTacToeBoxClass
@@ -46,15 +46,24 @@ namespace TicTacToeServerJson.Test
             var example =
                 @"{ ""data"" : [""-1-"", ""-2-"", ""-3-"", ""-4-"", ""-5-"", ""-6-"", ""-7-"", ""-8-"", ""-9-""]}";
             var converter = new JsonConverter();
-            var serialize = converter.Serialize(ticTacToeBox);
+            var serialize = converter.SerializeTicTacToeBox(ticTacToeBox);
             Assert.Equal(example, serialize);
+        }
+
+        [Fact]
+        public void DeserializeMove_Json()
+        {
+            var data = GetJsonData();
+            var converter = new JsonConverter();
+            var move = converter.DeserializeMove(data);
+            Assert.Equal("1", move);
         }
 
         private string GetJsonData()
         {
             return
                 @"{
-	""data"": [""-1-"", ""x"", ""x"", ""x"", ""x"", ""x"", ""x"", ""x"", ""-9-""]
+	""data"": [""-1-"", ""x"", ""x"", ""x"", ""x"", ""x"", ""x"", ""x"", ""-9-""], ""move"" : ""1""
 }";
         }
     }

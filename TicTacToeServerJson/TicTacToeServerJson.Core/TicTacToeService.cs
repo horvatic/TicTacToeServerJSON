@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using Server.Core;
+using TicTacToe.Core;
 
 namespace TicTacToeServerJson.Core
 {
@@ -16,17 +17,23 @@ namespace TicTacToeServerJson.Core
             IHttpResponse httpResponse,
             ServerProperties serverProperties)
         {
+            var game = ((TicTacToeGame)
+                serverProperties.ServiceSpecificObjectsWrapper);
             var converter = new JsonConverter();
             var jSonData = request.Remove(0,
                 request.IndexOf("\r\n\r\n",
                     StringComparison.Ordinal) + 4);
             var ticTacToeBox =
                 converter
-                    .Deserialize(jSonData);
+                    .DeserializeTicTacToeBox(jSonData);
 
+            var move = converter
+                .DeserializeMove(jSonData);
+
+           
             httpResponse.Body =
                 converter
-                    .Serialize(ticTacToeBox);
+                    .SerializeTicTacToeBox(ticTacToeBox);
             httpResponse.ContentType = "application/JSON";
             httpResponse.ContentLength =
                 Encoding.ASCII.GetByteCount(httpResponse.Body);

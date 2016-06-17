@@ -6,7 +6,7 @@ namespace TicTacToeServerJson.Core
 {
     public class JsonConverter
     {
-        public ITicTacToeBoxClass.ITicTacToeBox Deserialize
+        public ITicTacToeBoxClass.ITicTacToeBox DeserializeTicTacToeBox
             (string data)
         {
             var readData = data
@@ -25,7 +25,7 @@ namespace TicTacToeServerJson.Core
                 ListModule.OfSeq(dataSplit));
         }
 
-        public string Serialize
+        public string SerializeTicTacToeBox
             (ITicTacToeBoxClass.ITicTacToeBox ticTacToeBox)
         {
             var jSonTicTacToeBox = @"{ ""data"" : [";
@@ -40,6 +40,21 @@ namespace TicTacToeServerJson.Core
                 .Substring(0, jSonTicTacToeBox.Length - 2)
                                + "]}";
             return jSonTicTacToeBox;
+        }
+
+        public string DeserializeMove(string data)
+        {
+            var dataSplit = data
+                .Remove(0, data.IndexOf("]",
+                    StringComparison.Ordinal) + 1)
+                .Replace("\r\n", "")
+                .Replace("\"", "")
+                .Replace(" ", "")
+                .Replace("move", "")
+                .Replace(":", "")
+                .Replace("}", "")
+                .Replace(",", "");
+            return dataSplit;
         }
     }
 }

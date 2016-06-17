@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using Server.Core;
+using TicTacToe.Core;
 using TicTacToeServerJson.Core;
 using Xunit;
 
@@ -49,7 +50,8 @@ namespace TicTacToeServerJson.Test
             var serverProperties = new ServerProperties(null,
                 5555, new HttpResponse(), new ServerTime(),
                 new MockPrinter(),
-                new JsonConverter());
+                new TicTacToeGame(new User(), new Ai(),
+                    MakeSettings()));
             var httpResponce = service.ProcessRequest(GetJsonData(),
                 new HttpResponse(), serverProperties);
             var example =
@@ -60,6 +62,13 @@ namespace TicTacToeServerJson.Test
                 httpResponce.ContentLength);
             Assert.Equal("application/JSON",
                 httpResponce.ContentType);
+        }
+
+        private static GameSettings.gameSetting MakeSettings()
+        {
+            return new GameSettings.gameSetting(3, "x", "@"
+                , (int)PlayerValues.playerVals.Human
+                , false, false, false);
         }
 
         private string GetJsonData()
