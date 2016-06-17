@@ -58,6 +58,7 @@
     <Compile Include="JsonConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service404.cs" />
+    <Compile Include="ServiceDependents.cs" />
     <Compile Include="TicTacToeGame.cs" />
     <Compile Include="TicTacToeService.cs" />
     <Compile Include="User.cs" />

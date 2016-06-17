@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿using System.Collections.Generic;
+using System.Text;
+using Microsoft.FSharp.Collections;
 using Server.Core;
 using TicTacToe.Core;
 using TicTacToeServerJson.Core;
@@ -45,17 +47,35 @@ namespace TicTacToeServerJson.Test
         [Fact]
         public void Process_Request()
         {
+            var ticTacToeBox = new List<string>
+            {
+                "x",
+                "-2-",
+                "-3-",
+                "-4-",
+                "-5-",
+                "-6-",
+                "-7-",
+                "@",
+                "-9-"
+            };
+
+            var mockAi = new MockAi()
+                .StubMove(
+                    new TicTacToeBoxClass.TicTacToeBox(
+                        ListModule.OfSeq(ticTacToeBox)));
 
             var service = new TicTacToeService();
             var serverProperties = new ServerProperties(null,
                 5555, new HttpResponse(), new ServerTime(),
                 new MockPrinter(),
-                new TicTacToeGame(new User(), new Ai(),
-                    MakeSettings()));
+                new ServiceDependents(new JsonConverter(),
+                    new TicTacToeGame(new User(), mockAi,
+                        MakeSettings())));
             var httpResponce = service.ProcessRequest(GetJsonData(),
                 new HttpResponse(), serverProperties);
             var example =
-               @"{ ""data"" : [""-1-"", ""-2-"", ""-3-"", ""-4-"", ""-5-"", ""-6-"", ""-7-"", ""-8-"", ""-9-""]}";
+                @"{ ""data"" : [""x"", ""-2-"", ""-3-"", ""-4-"", ""-5-"", ""-6-"", ""-7-"", ""@"", ""-9-""]}";
 
             Assert.Equal(example, httpResponce.Body);
             Assert.Equal(Encoding.ASCII.GetByteCount(example),
@@ -67,7 +87,7 @@ namespace TicTacToeServerJson.Test
         private static GameSettings.gameSetting MakeSettings()
         {
             return new GameSettings.gameSetting(3, "x", "@"
-                , (int)PlayerValues.playerVals.Human
+                , (int) PlayerValues.playerVals.Human
                 , false, false, false);
         }
 
@@ -85,7 +105,7 @@ Content-Length: 76
 Connection: keep-alive
 
 {
-	""data"": [""-1-"", ""-2-"", ""-3-"", ""-4-"", ""-5-"", ""-6-"", ""-7-"", ""-8-"", ""-9-""]
+	""data"": [""-1-"", ""-2-"", ""-3-"", ""-4-"", ""-5-"", ""-6-"", ""-7-"", ""-8-"", ""-9-""], ""move"" : ""1""
 }";
         }
     }
