@@ -17,9 +17,13 @@ namespace TicTacToeServerJson.Core
             IHttpResponse httpResponse,
             ServerProperties serverProperties)
         {
-            var game = ((TicTacToeGame)
-                serverProperties.ServiceSpecificObjectsWrapper);
-            var converter = new JsonConverter();
+            var game = ((ServiceDependents)
+                serverProperties.ServiceSpecificObjectsWrapper)
+                .Game;
+
+            var converter = ((ServiceDependents)
+                serverProperties.ServiceSpecificObjectsWrapper)
+                .Converter;
             var jSonData = request.Remove(0,
                 request.IndexOf("\r\n\r\n",
                     StringComparison.Ordinal) + 4);
@@ -30,7 +34,14 @@ namespace TicTacToeServerJson.Core
             var move = converter
                 .DeserializeMove(jSonData);
 
-           
+            var errorMesageCode = Game.isUserInputCorrect(ticTacToeBox,
+                move, game.Setting.playerGlyph, game.Setting.aIGlyph);
+
+            if (errorMesageCode == Translate.Blank)
+                ticTacToeBox = (TicTacToeBoxClass.TicTacToeBox)
+                    game.Play(ticTacToeBox,
+                        CleanInput.SanitizeHumanPickedPlace(move, 9));
+
             httpResponse.Body =
                 converter
                     .SerializeTicTacToeBox(ticTacToeBox);

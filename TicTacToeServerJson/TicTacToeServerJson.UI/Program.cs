@@ -82,8 +82,9 @@ namespace TicTacToeServerJson.UI
             var properties = new ServerProperties(null,
                 portConverted,
                 new HttpResponse(), new ServerTime(), io,
+                new ServiceDependents(new JsonConverter(),
                 new TicTacToeGame(new User(), new Ai(),
-                    MakeSettings()));
+                    MakeSettings())));
             return new MainServer(zSocket, properties,
                 new HttpServiceFactory(new Service404()),
                 new DefaultRequestProcessor(), new DefaultSender(), 
