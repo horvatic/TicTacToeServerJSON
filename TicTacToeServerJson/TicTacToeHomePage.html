@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Vatic TicTacToe</title>
+</head>
+<body onload="MakePage()">
+
+<div id="mainBody">
+
+</div>
+
+<script>
+    function EditPage(xhttp) {
+        if (xhttp.readyState === 4 && xhttp.status === 200) {
+            var obj = JSON.parse(xhttp.responseText);
+            window.ticTacToeBox = obj.data;
+            MakePageWithData(obj.data);
+        }
+    }
+
+    function ChangeName(id) {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            EditPage(this);
+        };
+
+        xhttp.open("POST", "http://127.0.0.1:8080", true);
+        xhttp.setRequestHeader("Content-Type",
+            "application/JSON");
+        var packet = "{ \"data\" : [";
+        for (var i = 0; i < 8; i++) {
+            packet += "\"" + window.ticTacToeBox[i] + "\", ";
+        }
+        packet += "\"" + window.ticTacToeBox[8] + "\"], "
+        + "move : \"" + id + "\"}";
+        xhttp.send(packet);
+    }
+
+    function MakePage() {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            EditPage(this);
+        };
+
+        xhttp.open("GET", "http://127.0.0.1:8080", true);
+        xhttp.send();
+    }
+
+    function MakePageWithData(data) {
+        document.getElementById("mainBody")
+            .innerHTML = "";
+        for (var i = 0; i < 9; i += 3) {
+            for (var k = 0; k < 3; k++) {
+                document.getElementById("mainBody")
+                    .innerHTML +=
+                    "<button id=" + (i+k+1)
+                    + " onclick=ChangeName(this.id)>" +
+                    data[i+k] + "</button>";
+            }
+            document.getElementById("mainBody")
+                .innerHTML += "<br>";
+        }
+    }
+
+</script>
+
+</body>
+</html>
