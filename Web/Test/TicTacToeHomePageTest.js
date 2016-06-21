@@ -10,6 +10,27 @@ QUnit.test("StartPage", function (assert) {
         null);
 });
 
+QUnit.test("Element with Button", function (assert) {
+
+    var exampleHtml =
+        "<td>x</td>";
+    DisplayWithNoButton("x");
+    assert.equal(DisplayWithNoButton("x"),
+        exampleHtml);
+
+});
+
+QUnit.test("Element with No Button", function (assert) {
+
+    var exampleHtml =
+        "<td><button id=1"
+            + " onclick=PlayerChoose(this.id)>" +
+            "-1-</button></td>";
+    assert.equal(DisplayWithButton(1, "-1-"),
+        exampleHtml);
+
+});
+
 QUnit.test("Display_TicTacToe_Array_To_Page", function (assert) {
     var ticTacToeBox = ["x", "@", "-3-", "-4-",
         "-5-", "-6-", "-7-", "-8-", "-9-"]
