@@ -1,19 +1,40 @@
 // WebSite/TicTacToe
 
-function DisplayTicTacToeBox(ticTacToeBox) {
-    document.getElementById("mainBody")
-            .innerHTML = "";
+function DisplayWithNoButton(element) {
+    return "<td>" + element + "</td>";
+}
+
+function DisplayWithButton(id, element) {
+    return "<td><button id=" + id
+    + " onclick=PlayerChoose(this.id)>" +
+    element + "</button></td>";
+}
+
+function OutputBoxElement(index, element, GameOver) {
+    if (element != "@" && element != "x" && !GameOver)
+        return DisplayWithButton((index + 1),
+            element)
+    else
+        return DisplayWithNoButton(element)
+}
+
+function DisplayTicTacToeBox(ticTacToeBox, GameOver) {
+    var htmlOutPut = GameOver == true ?
+        "<button onclick=\"location.reload()\">Another Game?</button>"
+        : "";
+        htmlOutPut +=
+        "<table style=\"width: 100 % \">" +
+        "<tbody>"
     for (var i = 0; i < 9; i += 3) {
+        htmlOutPut += "<tr>"
         for (var k = 0; k < 3; k++) {
-            document.getElementById("mainBody")
-                .innerHTML +=
-                "<button id=" + (i + k + 1)
-                + " onclick=PlayerChoose(this.id)>" +
-                ticTacToeBox[i + k] + "</button>";
+            htmlOutPut += OutputBoxElement((i + k),
+                ticTacToeBox[i + k], GameOver);
         }
-        document.getElementById("mainBody")
-            .innerHTML += "<br>";
+        htmlOutPut += "</tr>"
     }
+    document.getElementById("mainBody")
+        .innerHTML = htmlOutPut + "</tr></tbody></table>"
 }
 
 function GenerateTicTacToeJSON(ticTacToeBox, move) {
@@ -28,9 +49,12 @@ function GenerateTicTacToeJSON(ticTacToeBox, move) {
 
 function EditPage(xhttp) {
     if (xhttp.readyState === 4 && xhttp.status === 200) {
-        var ticTacToeBox = JSON.parse(xhttp.responseText);
-        window.ticTacToeBox = ticTacToeBox.data;
-        DisplayTicTacToeBox(ticTacToeBox.data);
+        var serviceResponse = JSON.parse(xhttp.responseText);
+        window.ticTacToeBox = serviceResponse.data;
+        if (serviceResponse.GameOver == undefined)
+            DisplayTicTacToeBox(serviceResponse.data, false);
+        else 
+            DisplayTicTacToeBox(serviceResponse.data, true);
     }
 }
 

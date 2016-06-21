@@ -11,11 +11,11 @@ namespace TicTacToeServerJson.Core
         public bool CanProcessRequest(string request,
             ServerProperties serverProperties)
         {
-            if(request == "")
+            if (request == "")
                 return false;
             var action =
-               request.Substring(0, request.IndexOf("\r\n",
-                   StringComparison.Ordinal));
+                request.Substring(0, request.IndexOf("\r\n",
+                    StringComparison.Ordinal));
             if (action == "OPTIONS / HTTP/1.1"
                 || action == "OPTIONS / HTTP/1.0")
                 return true;
@@ -111,6 +111,15 @@ namespace TicTacToeServerJson.Core
             httpResponse.Body =
                 converter
                     .SerializeTicTacToeBox(ticTacToeBox);
+
+            if (GameOver(ticTacToeBox, game))
+            {
+                httpResponse.Body
+                    = httpResponse.Body
+                        .Replace("}", @", ""GameOver"" : ""true""}");
+            }
+
+
             httpResponse.ContentType = "application/JSON";
             httpResponse.ContentLength =
                 Encoding.ASCII.GetByteCount(httpResponse.Body);
@@ -120,6 +129,17 @@ namespace TicTacToeServerJson.Core
             };
 
             return httpResponse;
+        }
+
+        private bool GameOver(ITicTacToeBoxClass.ITicTacToeBox
+            ticTacToeBox,
+            TicTacToeGame game)
+        {
+            return CheckForWinnerOrTie
+                .checkForWinnerOrTie(ticTacToeBox,
+                    game.Setting.playerGlyph,
+                    game.Setting.aIGlyph)
+                   != (int) GameStatusCodes.GenResult.NoWinner;
         }
 
         private string CleanRequest(string request)

@@ -49,7 +49,6 @@ namespace TicTacToeServerJson.Test
         [Fact]
         public void Empty_Request()
         {
-           
             var service = new TicTacToeService();
             var serverProperties = new ServerProperties(null,
                 5555, new HttpResponse(), new ServerTime(),
@@ -67,7 +66,7 @@ namespace TicTacToeServerJson.Test
                 new MockPrinter());
             var httpResponce = service.ProcessRequest(GetOptionData(),
                 new HttpResponse(), serverProperties);
-           
+
             Assert.Equal("Access-Control-Allow-Origin: *\r\n",
                 httpResponce.OtherHeaders[0]);
             Assert.Equal("Access-Control-Allow-Headers: Content-Type\r\n",
@@ -119,19 +118,60 @@ namespace TicTacToeServerJson.Test
         }
 
         [Fact]
-        public void Process_Request_No_Send_Json()
+        public void Process_Request_Send_Json_Game_Over()
         {
-          
+            var ticTacToeBox = new List<string>
+            {
+                "x",
+                "x",
+                "x",
+                "-4-",
+                "-5-",
+                "-6-",
+                "@",
+                "@",
+                "-9-"
+            };
+
+            var mockAi = new MockAi()
+                .StubMove(
+                    new TicTacToeBoxClass.TicTacToeBox(
+                        ListModule.OfSeq(ticTacToeBox)));
+
             var service = new TicTacToeService();
             var serverProperties = new ServerProperties(null,
                 5555, new HttpResponse(), new ServerTime(),
                 new MockPrinter(),
                 new ServiceDependents(new JsonConverter(),
-                    new TicTacToeGame(new User(), new Ai(), 
+                    new TicTacToeGame(new User(), mockAi,
                         MakeSettings())));
-            var httpResponce = 
-                service.ProcessRequest(GetRequestNoJson(),
+            var httpResponce = service.ProcessRequest(GetJsonData(),
                 new HttpResponse(), serverProperties);
+            var example =
+                @"{ ""data"" : [""x"", ""x"", ""x"", ""-4-"", ""-5-"", ""-6-"", ""@"", ""@"", ""-9-""], ""GameOver"" : ""true""}";
+
+            Assert.Equal(example, httpResponce.Body);
+            Assert.Equal(Encoding.ASCII.GetByteCount(example),
+                httpResponce.ContentLength);
+            Assert.Equal("application/JSON",
+                httpResponce.ContentType);
+            Assert.Equal("Access-Control-Allow-Origin: *\r\n",
+                httpResponce.OtherHeaders[0]);
+        }
+
+        [Fact]
+        public void Process_Request_No_Send_Json()
+        {
+            var service = new TicTacToeService();
+            var serverProperties = new ServerProperties(null,
+                5555, new HttpResponse(), new ServerTime(),
+                new MockPrinter(),
+                new ServiceDependents(new JsonConverter(),
+                    new TicTacToeGame(new User(), new Ai(),
+                        MakeSettings())));
+            var httpResponce =
+                service.ProcessRequest(GetRequestNoJson(),
+                    new HttpResponse(), serverProperties);
             var example =
                 @"{ ""data"" : [""-1-"", ""-2-"", ""-3-"", ""-4-"", ""-5-"", ""-6-"", ""-7-"", ""-8-"", ""-9-""]}";
 
