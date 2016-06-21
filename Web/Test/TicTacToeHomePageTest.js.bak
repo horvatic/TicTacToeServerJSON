@@ -1,0 +1,23 @@
+// Test/TicTacToeHomePageTest.js
+var FakeXMLHttpRequest = require('fake-xml-http-request');
+var chai = require('chai');
+var sinon = require('sinon');
+var expect = chai.expect; // we are using the "expect" style of Chai
+var TicTacToe = require('./../WebSite/TicTacToe');
+
+
+describe('StartPage', function () {
+    it('return 0', function () {
+        xhr = new FakeXMLHttpRequest();
+        xhr.respond(200, { "Content-Type": "application/json" },
+            '{"data": ["-1-", "-2-", "-3-"", "-4-", "-5-", "-6-", "-7-", "-8-", "-9-"]}');
+
+        var mainBody = document.createElement('mainBody');
+        sinon.stub(document, 'getElementById');
+        document.getElementById.withArgs('mainBody').returns(mainBody);
+
+        var responce = TicTacToe.StartPage(xhr);
+        expect(responce).to.equal(0);
+
+    });
+})
