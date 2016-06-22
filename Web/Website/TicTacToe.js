@@ -20,6 +20,7 @@ function OutputBoxElement(index, element, GameOver) {
 
 function DisplayTicTacToeBox(ticTacToeBox, GameOver) {
     var htmlOutPut = GameOver == true ?
+        "<p>Game Over</p>" +
         "<button onclick=\"location.reload()\">Another Game?</button>"
         : "";
         htmlOutPut +=

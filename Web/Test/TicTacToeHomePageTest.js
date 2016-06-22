@@ -67,6 +67,7 @@ QUnit.test("Display_TicTacToe_Game_Over", function (assert) {
         "-5-", "-6-", "-7-", "@", "@"]
 
     var exampleHtml =
+        "<p>Game Over</p>" + 
         "<button onclick=\"location.reload()\">Another Game?</button>" +
         "<table style=\"width: 100 % \">" +
         "<tbody><tr>" +
@@ -173,6 +174,7 @@ QUnit.test("Edit_Page_To_Show_New_TicTacToe_Board", function (assert) {
 QUnit.test("Edit_Page_To_Show_New_TicTacToe_Board_Game_Over",
     function (assert) {
         var exampleHtml =
+        "<p>Game Over</p>" +
         "<button onclick=\"location.reload()\">Another Game?</button>" +
         "<table style=\"width: 100 % \">" +
         "<tbody><tr>" +
