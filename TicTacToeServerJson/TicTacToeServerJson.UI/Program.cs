@@ -87,7 +87,7 @@ namespace TicTacToeServerJson.UI
                     MakeSettings())));
             return new MainServer(zSocket, properties,
                 new HttpServiceFactory(new Service404()),
-                new DefaultRequestProcessor(), new DefaultSender(), 
+                new RequestProcessor(), new DefaultSender(), 
                 new List<string> { "TicTacToeServerJson.Core" },
                 new List<Assembly> {Assembly.GetAssembly(typeof(TicTacToeService))});
         }
