@@ -12,7 +12,7 @@ namespace TicTacToeServerJson.Test
             _mock = (new Mock<IHttpServiceProcessor>());
         }
 
-        public MockHttpService(IHttpResponse responce)
+        public MockHttpService(string responce)
         {
             _mock = (new Mock<IHttpServiceProcessor>());
             StubProcessRequest(responce);
@@ -26,14 +26,14 @@ namespace TicTacToeServerJson.Test
             return _mock.Object.CanProcessRequest(request, serverProperties);
         }
 
-        public IHttpResponse ProcessRequest(string request, 
+        public string ProcessRequest(string request,
             IHttpResponse httpResponse,
             ServerProperties serverProperties)
         {
             return _mock.Object.ProcessRequest(request, httpResponse, serverProperties);
         }
 
-        public MockHttpService StubProcessRequest(IHttpResponse response)
+        public MockHttpService StubProcessRequest(string response)
         {
             _mock.Setup(
                 m => m.ProcessRequest(It.IsAny<string>(), It.IsAny<IHttpResponse>(),
