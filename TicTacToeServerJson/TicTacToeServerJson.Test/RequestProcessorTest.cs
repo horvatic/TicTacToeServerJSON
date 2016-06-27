@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Reflection;
-using Server.Core;
+﻿using Server.Core;
 using TicTacToeServerJson.Core;
 using Xunit;
 
@@ -36,53 +33,43 @@ namespace TicTacToeServerJson.Test
                           "Accept-Encoding: gzip, deflate\r\n" +
                           "Accept-Language: en-US,en;q=0.8\r\n\r\n";
 
-            var zSocket = new MockZSocket().StubReceive(request)
+            var zSocket = new MockZSocket().StubReceive("")
                 .StubSentToReturn(10)
                 .StubConnect(true);
             zSocket = zSocket.StubAcceptObject(zSocket);
-            var sender = new MockSender().StubSendResponce("200 OK");
-            var responce = new HttpResponse();
             var properties = new ServerProperties(@"Home",
-                8080, new HttpResponse(), new ServerTime(),
+                8080, new ServerTime(),
                 new MockPrinter());
-            var server = new MainServer(zSocket, properties,
-                new HttpServiceFactory(new MockHttpService(responce)),
-                new RequestProcessor(), sender,
-                new List<string> {"TicTacToeServerJson.Test"},
-                new List<Assembly> {Assembly.GetExecutingAssembly()});
-            server.RunningProcess(new PoolDataForRequest(zSocket,
-                Guid.NewGuid()));
+            var process = new RequestProcessor();
+            var status = process.HandleRequest(request, zSocket,
+                new MockHttpService()
+                    .StubProcessRequest("200 OK"),
+                properties, new HttpResponse(zSocket));
 
-            zSocket.VerifyManyReceive(1);
-            sender.VerifySendResponce(zSocket, responce);
+            Assert.Equal("200 OK", status);
+            zSocket.VerifyManyReceive(0);
         }
 
         [Fact]
         public void Post_Request_Two_Parts()
         {
-            var request = new Queue<string>();
-            request.Enqueue(GetRequestHeader());
-            request.Enqueue(GetJson());
+            var request = GetJson();
             var zSocket = new MockZSocket()
-                .StubReceiveWithQueue(request)
+                .StubReceive(request)
                 .StubSentToReturn(10)
                 .StubConnect(true);
             zSocket = zSocket.StubAcceptObject(zSocket);
-            var sender = new MockSender().StubSendResponce("200 OK");
-            var responce = new HttpResponse();
             var properties = new ServerProperties(@"Home",
-                8080, new HttpResponse(), new ServerTime(),
+                8080, new ServerTime(),
                 new MockPrinter());
-            var server = new MainServer(zSocket, properties,
-                new HttpServiceFactory(new MockHttpService(responce)),
-                new RequestProcessor(), sender,
-                new List<string> {"TicTacToeServerJson.Test"},
-                new List<Assembly> {Assembly.GetExecutingAssembly()});
-            server.RunningProcess(new PoolDataForRequest(zSocket,
-                Guid.NewGuid()));
+            var process = new RequestProcessor();
+            var status = process.HandleRequest(GetRequestHeader(), zSocket,
+                new MockHttpService()
+                    .StubProcessRequest("200 OK"),
+                properties, new HttpResponse(zSocket));
 
-            zSocket.VerifyManyReceive(2);
-            sender.VerifySendResponce(zSocket, responce);
+            zSocket.VerifyManyReceive(1);
+            Assert.Equal("200 OK", status);
         }
 
         [Fact]
@@ -90,40 +77,37 @@ namespace TicTacToeServerJson.Test
         {
             var request = GetRequestHeader() + GetJson();
             var zSocket = new MockZSocket()
-                .StubReceive(request)
+                .StubReceive("")
                 .StubSentToReturn(10)
                 .StubConnect(true);
             zSocket = zSocket.StubAcceptObject(zSocket);
-            var sender = new MockSender().StubSendResponce("200 OK");
-            var responce = new HttpResponse();
             var properties = new ServerProperties(@"Home",
-                8080, new HttpResponse(), new ServerTime(),
+                8080, new ServerTime(),
                 new MockPrinter());
-            var server = new MainServer(zSocket, properties,
-                new HttpServiceFactory(new MockHttpService(responce)),
-                new RequestProcessor(), sender,
-                new List<string> { "TicTacToeServerJson.Test" },
-                new List<Assembly> { Assembly.GetExecutingAssembly() });
-            server.RunningProcess(new PoolDataForRequest(zSocket,
-                Guid.NewGuid()));
 
-            zSocket.VerifyManyReceive(1);
-            sender.VerifySendResponce(zSocket, responce);
+            var process = new RequestProcessor();
+            var status = process.HandleRequest(request,
+                zSocket, new MockHttpService()
+                    .StubProcessRequest("200 OK"),
+                properties, new HttpResponse(zSocket));
+
+            zSocket.VerifyManyReceive(0);
+            Assert.Equal("200 OK", status);
         }
 
         private string GetRequestHeader()
         {
             return
                 @"POST / HTTP/1.1
-Host: localhost:8080
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:46.0) Gecko/20100101 Firefox/46.0
-Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
-Accept-Language: en-US,en;q=0.5
-Accept-Encoding: gzip, deflate
-Content-Type: application/JSON
-Content-Length: 76
+        Host: localhost:8080
+        User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:46.0) Gecko/20100101 Firefox/46.0
+        Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+        Accept-Language: en-US,en;q=0.5
+        Accept-Encoding: gzip, deflate
+        Content-Type: application/JSON
+        Content-Length: 76
 
-";
+        ";
         }
 
         private string GetJson()

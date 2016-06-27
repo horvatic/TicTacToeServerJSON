@@ -8,6 +8,7 @@ using Server.Core;
 using TicTacToe.Core;
 using TicTacToeServerJson.Core;
 
+
 namespace TicTacToeServerJson.UI
 {
     public class Program
@@ -81,15 +82,15 @@ namespace TicTacToeServerJson.UI
             var zSocket = new DefaultZSocket(endPoint);
             var properties = new ServerProperties(null,
                 portConverted,
-                new HttpResponse(), new ServerTime(), io,
+                new ServerTime(), io,
                 new ServiceDependents(new JsonConverter(),
                 new TicTacToeGame(new User(), new Ai(),
                     MakeSettings())));
             return new MainServer(zSocket, properties,
                 new HttpServiceFactory(new Service404()),
-                new RequestProcessor(), new DefaultSender(), 
+                new RequestProcessor(),
                 new List<string> { "TicTacToeServerJson.Core" },
-                new List<Assembly> {Assembly.GetAssembly(typeof(TicTacToeService))});
+                new List<Assembly> { Assembly.GetAssembly(typeof(TicTacToeService)) });
         }
 
 
@@ -131,7 +132,7 @@ namespace TicTacToeServerJson.UI
         private static GameSettings.gameSetting MakeSettings()
         {
             return new GameSettings.gameSetting(3, "x", "@"
-                , (int) PlayerValues.playerVals.Human
+                , (int)PlayerValues.playerVals.Human
                 , false, false, false);
         }
     }
