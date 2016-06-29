@@ -129,9 +129,9 @@ QUnit.test("Display_TicTacToe_Array_To_Page_Has_Moves", function (assert) {
 });
 
 QUnit.test("Making_Of_JSON_To_Send_To_Server", function(assert) {
-    var example = "{ \"data\" : [\"-1-\", \"-2-\","
-        + " \"-3-\", \"-4-\", \"-5-\", \"-6-\", \"-7-\","
-        + " \"-8-\", \"-9-\"], \"move\" : \"1\" }";
+    var example = "{ \"data\" : [\"-1-\",\"-2-\","
+        + "\"-3-\",\"-4-\",\"-5-\",\"-6-\",\"-7-\","
+        + "\"-8-\",\"-9-\"], \"move\" : \"1\" }";
 
     var ticTacToeBox = ["-1-", "-2-", "-3-", "-4-",
     "-5-", "-6-", "-7-", "-8-", "-9-"]
@@ -244,9 +244,9 @@ QUnit.test("Player_Choose_Move", function (assert) {
     var ticTacToeJson = "{ \"data\" : [\"-1-\", \"-2-\","
     + " \"-3-\", \"-4-\", \"-5-\", \"-6-\", \"-7-\","
     + " \"-8-\", \"-9-\"] }";
-    var sendJson = "{ \"data\" : [\"-1-\", \"-2-\","
-    + " \"-3-\", \"-4-\", \"-5-\", \"-6-\", \"-7-\","
-    + " \"-8-\", \"-9-\"], \"move\" : \"1\" }";
+    var sendJson = "{ \"data\" : [\"-1-\",\"-2-\","
+    + "\"-3-\",\"-4-\",\"-5-\",\"-6-\",\"-7-\","
+    + "\"-8-\",\"-9-\"], \"move\" : \"1\" }";
     xhttp.SetResponseText(returnedJson);
     window.xhttp = xhttp;
     var ticTacToeBox = JSON.parse(ticTacToeJson)
