@@ -1,8 +1,8 @@
 QUnit.test("StartPage", function (assert) {
 
     var xhttp = new MockXMLHttpRequest();
-    StartPage(xhttp);
-    assert.ok(window.xhttp, xhttp);
+    startPage(xhttp);
+    assert.deepEqual(window.xhttp, xhttp);
     assert.equal(xhttp.OpenRequestValues,
         "GEThttp://127.0.0.1:8080true");
     assert.equal(xhttp.SendCalled, 1);
@@ -10,23 +10,28 @@ QUnit.test("StartPage", function (assert) {
         null);
 });
 
-QUnit.test("Element with Button", function (assert) {
+QUnit.test("Element with No Button", function (assert) {
 
     var exampleHtml =
-        "<td>x</td>";
-    DisplayWithNoButton("x");
-    assert.equal(DisplayWithNoButton("x"),
+        document.createElement("td");
+    exampleHtml.appendChild(document
+        .createTextNode("x"));
+    displayWithNoButton("x");
+    assert.deepEqual(displayWithNoButton("x"),
         exampleHtml);
 
 });
 
-QUnit.test("Element with No Button", function (assert) {
+QUnit.test("Element with Button", function (assert) {
 
-    var exampleHtml =
-        "<td><button id=1"
-            + " onclick=PlayerChoose(this.id)>" +
-            "-1-</button></td>";
-    assert.equal(DisplayWithButton(1, "-1-"),
+    var exampleHtml = document.createElement("td");
+    var moveableSpace = document.createElement("button");
+    moveableSpace.id = 1;
+    moveableSpace.addEventListener("click",
+        function () { playerChoose(this.id) })
+    moveableSpace.appendChild(document.createTextNode("-1-"));
+    exampleHtml.appendChild(moveableSpace);
+    assert.deepEqual(displayWithButton(1, "-1-"),
         exampleHtml);
 
 });
@@ -36,27 +41,27 @@ QUnit.test("Display_TicTacToe_Array_To_Page", function (assert) {
         "-5-", "-6-", "-7-", "-8-", "-9-"]
 
     var exampleHtml =
-        "<table style=\"width: 100 % \">" +
-        "<tbody><tr>" +
+        "<table>" +
+        "<tr>" +
         "<td>x</td>" +
         "<td>@</td>" +
-        "<td><button id=\"3\" onclick=\"PlayerChoose(this.id)\">" +
+        "<td><button id=\"3\">" +
         "-3-</button></td></tr><tr>" +
-        "<td><button id=\"4\" onclick=\"PlayerChoose(this.id)\">" +
+        "<td><button id=\"4\">" +
         "-4-</button></td>" +
-        "<td><button id=\"5\" onclick=\"PlayerChoose(this.id)\">" +
+        "<td><button id=\"5\">" +
         "-5-</button></td>" +
-        "<td><button id=\"6\" onclick=\"PlayerChoose(this.id)\">" +
+        "<td><button id=\"6\">" +
         "-6-</button></td></tr><tr>" +
-        "<td><button id=\"7\" onclick=\"PlayerChoose(this.id)\">" +
+        "<td><button id=\"7\">" +
         "-7-</button></td>" +
-        "<td><button id=\"8\" onclick=\"PlayerChoose(this.id)\">" +
+        "<td><button id=\"8\">" +
         "-8-</button></td>" +
-        "<td><button id=\"9\" onclick=\"PlayerChoose(this.id)\">" +
+        "<td><button id=\"9\">" +
         "-9-</button></td>"
-        + "</tr></tbody></table>";
+        + "</tr></table>";
 
-    DisplayTicTacToeBox(ticTacToeBox, false);
+    displayTicTacToeBox(ticTacToeBox, false);
     assert.equal(document.getElementById('mainBody').innerHTML,
         exampleHtml);
 
@@ -68,9 +73,9 @@ QUnit.test("Display_TicTacToe_Game_Over", function (assert) {
 
     var exampleHtml =
         "<p>Game Over</p>" + 
-        "<button onclick=\"location.reload()\">Another Game?</button>" +
-        "<table style=\"width: 100 % \">" +
-        "<tbody><tr>" +
+        "<button>Another Game?</button>" +
+        "<table>" +
+        "<tr>" +
         "<td>x</td>" +
         "<td>x</td>" +
         "<td>x</td></tr><tr>" +
@@ -84,9 +89,9 @@ QUnit.test("Display_TicTacToe_Game_Over", function (assert) {
         "-7-</td>" +
         "<td>@</td>" +
         "<td>@</td>"
-        + "</tr></tbody></table>";
+        + "</tr></table>";
 
-    DisplayTicTacToeBox(ticTacToeBox, true);
+    displayTicTacToeBox(ticTacToeBox, true);
     assert.equal(document.getElementById('mainBody').innerHTML,
         exampleHtml);
 
@@ -97,27 +102,27 @@ QUnit.test("Display_TicTacToe_Array_To_Page_Has_Moves", function (assert) {
         "-5-", "-6-", "-7-", "-8-", "-9-"]
 
     var exampleHtml =
-        "<table style=\"width: 100 % \">" +
-        "<tbody><tr>" +
+        "<table>" +
+        "<tr>" +
         "<td>x</td>" +
         "<td>@</td>" +
-        "<td><button id=\"3\" onclick=\"PlayerChoose(this.id)\">" +
+        "<td><button id=\"3\">" +
         "-3-</button></td></tr><tr>" +
-        "<td><button id=\"4\" onclick=\"PlayerChoose(this.id)\">" +
+        "<td><button id=\"4\">" +
         "-4-</button></td>" +
-        "<td><button id=\"5\" onclick=\"PlayerChoose(this.id)\">" +
+        "<td><button id=\"5\">" +
         "-5-</button></td>" +
-        "<td><button id=\"6\" onclick=\"PlayerChoose(this.id)\">" +
+        "<td><button id=\"6\">" +
         "-6-</button></td></tr><tr>" +
-        "<td><button id=\"7\" onclick=\"PlayerChoose(this.id)\">" +
+        "<td><button id=\"7\">" +
         "-7-</button></td>" +
-        "<td><button id=\"8\" onclick=\"PlayerChoose(this.id)\">" +
+        "<td><button id=\"8\">" +
         "-8-</button></td>" +
-        "<td><button id=\"9\" onclick=\"PlayerChoose(this.id)\">" +
+        "<td><button id=\"9\">" +
         "-9-</button></td>"
-        + "</tr></tbody></table>";
+        + "</tr></table>";
 
-    DisplayTicTacToeBox(ticTacToeBox, false);
+    displayTicTacToeBox(ticTacToeBox, false);
     assert.equal(document.getElementById('mainBody').innerHTML,
         exampleHtml);
 
@@ -132,7 +137,7 @@ QUnit.test("Making_Of_JSON_To_Send_To_Server", function(assert) {
     "-5-", "-6-", "-7-", "-8-", "-9-"]
     var move = 1;
     var JSONFormated
-        = GenerateTicTacToeJSON(ticTacToeBox, move);
+        = generateTicTacToeJSON(ticTacToeBox, move);
 
     assert.equal(JSONFormated, example);
 })
@@ -143,29 +148,29 @@ QUnit.test("Edit_Page_To_Show_New_TicTacToe_Board", function (assert) {
         + " \"-3-\", \"-4-\", \"-5-\", \"-6-\", \"-7-\","
         + " \"-8-\", \"-9-\"] }";
     xhttp.SetResponseText(Json);
-    EditPage(xhttp);
+    editPage(xhttp);
     var exampleHtml =
-        "<table style=\"width: 100 % \">" +
-        "<tbody><tr>" +
-        "<td><button id=\"1\" onclick=\"PlayerChoose(this.id)\">" +
+        "<table>" +
+        "<tr>" +
+        "<td><button id=\"1\">" +
         "-1-</button></td>" +
-        "<td><button id=\"2\" onclick=\"PlayerChoose(this.id)\">" +
+        "<td><button id=\"2\">" +
         "-2-</button></td>" +
-        "<td><button id=\"3\" onclick=\"PlayerChoose(this.id)\">" +
+        "<td><button id=\"3\">" +
         "-3-</button></td></tr><tr>" +
-        "<td><button id=\"4\" onclick=\"PlayerChoose(this.id)\">" +
+        "<td><button id=\"4\">" +
         "-4-</button></td>" +
-        "<td><button id=\"5\" onclick=\"PlayerChoose(this.id)\">" +
+        "<td><button id=\"5\">" +
         "-5-</button></td>" +
-        "<td><button id=\"6\" onclick=\"PlayerChoose(this.id)\">" +
+        "<td><button id=\"6\">" +
         "-6-</button></td></tr><tr>" +
-        "<td><button id=\"7\" onclick=\"PlayerChoose(this.id)\">" +
+        "<td><button id=\"7\">" +
         "-7-</button></td>" +
-        "<td><button id=\"8\" onclick=\"PlayerChoose(this.id)\">" +
+        "<td><button id=\"8\">" +
         "-8-</button></td>" +
-        "<td><button id=\"9\" onclick=\"PlayerChoose(this.id)\">" +
+        "<td><button id=\"9\">" +
         "-9-</button></td>"
-        + "</tr></tbody></table>";
+        + "</tr></table>";
 
     assert.equal(document.getElementById('mainBody').innerHTML,
         exampleHtml);
@@ -175,9 +180,9 @@ QUnit.test("Edit_Page_To_Show_New_TicTacToe_Board_Game_Over",
     function (assert) {
         var exampleHtml =
         "<p>Game Over</p>" +
-        "<button onclick=\"location.reload()\">Another Game?</button>" +
-        "<table style=\"width: 100 % \">" +
-        "<tbody><tr>" +
+        "<button>Another Game?</button>" +
+        "<table>" +
+        "<tr>" +
         "<td>x</td>" +
         "<td>x</td>" +
         "<td>x</td></tr><tr>" +
@@ -191,13 +196,13 @@ QUnit.test("Edit_Page_To_Show_New_TicTacToe_Board_Game_Over",
         "-7-</td>" +
         "<td>@</td>" +
         "<td>@</td>"
-        + "</tr></tbody></table>";
+        + "</tr></table>";
         var xhttp = new MockXMLHttpRequest();
         var Json = "{ \"data\" : [\"x\", \"x\","
             + " \"x\", \"-4-\", \"-5-\", \"-6-\", \"-7-\","
             + " \"@\", \"@\"], \"GameOver\" : \"true\" }";
         xhttp.SetResponseText(Json);
-        EditPage(xhttp);
+        editPage(xhttp);
 
     assert.equal(document.getElementById('mainBody').innerHTML,
         exampleHtml);
@@ -212,9 +217,7 @@ QUnit.test("Edit_Page_Ready_State_Zero", function (assert) {
     var ticTacToeBox = JSON.parse(Json);
     xhttp.SetResponseText(Json);
     xhttp.readyState = 0;
-    EditPage(xhttp);
-    assert.ok(window.ticTacToeBox,
-        ticTacToeBox);
+    editPage(xhttp);
     assert.equal(document.getElementById('mainBody').innerHTML,
         "");
     window.ticTacToeBox = null;
@@ -227,7 +230,7 @@ QUnit.test("Edit_Page_Ready_Status_404", function (assert) {
         + " \"-8-\", \"-9-\"] }";
     xhttp.SetResponseText(Json);
     xhttp.status = 404;
-    EditPage(xhttp);
+    editPage(xhttp);
 
     assert.equal(document.getElementById('mainBody').innerHTML,
         "");
@@ -247,9 +250,10 @@ QUnit.test("Player_Choose_Move", function (assert) {
     xhttp.SetResponseText(returnedJson);
     window.xhttp = xhttp;
     var ticTacToeBox = JSON.parse(ticTacToeJson)
+    var ticTacToeBox = JSON.parse(ticTacToeJson)
     window.ticTacToeBox = ticTacToeBox.data;
 
-    PlayerChoose(1);
+    playerChoose(1);
     assert.equal(window.xhttp.OpenRequestValues,
         "POSThttp://127.0.0.1:8080true");
     assert.equal(window.xhttp.RequestHeader,
