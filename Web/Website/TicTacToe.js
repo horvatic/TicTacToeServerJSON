@@ -67,15 +67,10 @@ function gameOverRefreshButtonHtml() {
 }
 
 function generateTicTacToeJSON(ticTacToeBox, move) {
-    //var packet = "{ \"data\" : [";
-    //for (var i = 0; i < 8; i++) {
-    //    packet += "\"" + ticTacToeBox[i] + "\", ";
-    //}
-    //packet += "\"" + ticTacToeBox[8] + "\"], "
-    //+ "\"move\" : \"" + move + "\" }";
-    //return packet;
-    return "{ \"data\" : " + JSON.stringify(ticTacToeBox)
-    + ", \"move\" : \"" + move + "\" }";
+    return JSON.stringify({
+        "data": ticTacToeBox,
+        "move": move.toString()
+    });
 }
 
 function editPage(xhttp) {

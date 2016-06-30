@@ -3,9 +3,9 @@ QUnit.test("StartPage", function (assert) {
     var xhttp = new MockXMLHttpRequest();
     startPage(xhttp);
     assert.deepEqual(window.xhttp, xhttp);
-    assert.equal(xhttp.OpenRequestValues,
+    assert.equal(xhttp.mockOpenRequestValues,
         "GEThttp://127.0.0.1:8080true");
-    assert.equal(xhttp.SendCalled, 1);
+    assert.equal(xhttp.mockSendCalled, 1);
     assert.notEqual(xhttp.onreadystatechange,
         null);
 });
@@ -129,9 +129,9 @@ QUnit.test("Display_TicTacToe_Array_To_Page_Has_Moves", function (assert) {
 });
 
 QUnit.test("Making_Of_JSON_To_Send_To_Server", function(assert) {
-    var example = "{ \"data\" : [\"-1-\",\"-2-\","
+    var example = "{\"data\":[\"-1-\",\"-2-\","
         + "\"-3-\",\"-4-\",\"-5-\",\"-6-\",\"-7-\","
-        + "\"-8-\",\"-9-\"], \"move\" : \"1\" }";
+        + "\"-8-\",\"-9-\"],\"move\":\"1\"}";
 
     var ticTacToeBox = ["-1-", "-2-", "-3-", "-4-",
     "-5-", "-6-", "-7-", "-8-", "-9-"]
@@ -147,7 +147,7 @@ QUnit.test("Edit_Page_To_Show_New_TicTacToe_Board", function (assert) {
     var Json = "{ \"data\" : [\"-1-\", \"-2-\","
         + " \"-3-\", \"-4-\", \"-5-\", \"-6-\", \"-7-\","
         + " \"-8-\", \"-9-\"] }";
-    xhttp.SetResponseText(Json);
+    xhttp.stubSetResponseText(Json);
     editPage(xhttp);
     var exampleHtml =
         "<table>" +
@@ -201,7 +201,7 @@ QUnit.test("Edit_Page_To_Show_New_TicTacToe_Board_Game_Over",
         var Json = "{ \"data\" : [\"x\", \"x\","
             + " \"x\", \"-4-\", \"-5-\", \"-6-\", \"-7-\","
             + " \"@\", \"@\"], \"GameOver\" : \"true\" }";
-        xhttp.SetResponseText(Json);
+        xhttp.stubSetResponseText(Json);
         editPage(xhttp);
 
     assert.equal(document.getElementById('mainBody').innerHTML,
@@ -215,7 +215,7 @@ QUnit.test("Edit_Page_Ready_State_Zero", function (assert) {
         + " \"-3-\", \"-4-\", \"-5-\", \"-6-\", \"-7-\","
         + " \"-8-\", \"-9-\"] }";
     var ticTacToeBox = JSON.parse(Json);
-    xhttp.SetResponseText(Json);
+    xhttp.stubSetResponseText(Json);
     xhttp.readyState = 0;
     editPage(xhttp);
     assert.equal(document.getElementById('mainBody').innerHTML,
@@ -228,7 +228,7 @@ QUnit.test("Edit_Page_Ready_Status_404", function (assert) {
     var Json = "{ \"data\" : [\"-1-\", \"-2-\","
         + " \"-3-\", \"-4-\", \"-5-\", \"-6-\", \"-7-\","
         + " \"-8-\", \"-9-\"] }";
-    xhttp.SetResponseText(Json);
+    xhttp.stubSetResponseText(Json);
     xhttp.status = 404;
     editPage(xhttp);
 
@@ -244,21 +244,21 @@ QUnit.test("Player_Choose_Move", function (assert) {
     var ticTacToeJson = "{ \"data\" : [\"-1-\", \"-2-\","
     + " \"-3-\", \"-4-\", \"-5-\", \"-6-\", \"-7-\","
     + " \"-8-\", \"-9-\"] }";
-    var sendJson = "{ \"data\" : [\"-1-\",\"-2-\","
+    var sendJson = "{\"data\":[\"-1-\",\"-2-\","
     + "\"-3-\",\"-4-\",\"-5-\",\"-6-\",\"-7-\","
-    + "\"-8-\",\"-9-\"], \"move\" : \"1\" }";
-    xhttp.SetResponseText(returnedJson);
+    + "\"-8-\",\"-9-\"],\"move\":\"1\"}";
+    xhttp.stubSetResponseText(returnedJson);
     window.xhttp = xhttp;
     var ticTacToeBox = JSON.parse(ticTacToeJson)
     var ticTacToeBox = JSON.parse(ticTacToeJson)
     window.ticTacToeBox = ticTacToeBox.data;
 
     playerChoose(1);
-    assert.equal(window.xhttp.OpenRequestValues,
+    assert.equal(window.xhttp.mockOpenRequestValues,
         "POSThttp://127.0.0.1:8080true");
-    assert.equal(window.xhttp.RequestHeader,
+    assert.equal(window.xhttp.mockRequestHeader,
         "Content-Typeapplication/JSON");
-    assert.equal(window.xhttp.SendData,
+    assert.equal(window.xhttp.mockSendData,
         sendJson);
     window.ticTacToeBox = null;
     window.xhttp = null;
