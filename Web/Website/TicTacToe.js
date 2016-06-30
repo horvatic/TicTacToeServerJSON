@@ -27,10 +27,8 @@ function outputBoxElement(index, element, GameOver) {
 }
 
 function displayTicTacToeBox(ticTacToeBox, gameOver) {
-    displayDiv = document.getElementById("mainBody")
-    while (displayDiv.firstChild) {
-        displayDiv.removeChild(displayDiv.firstChild);
-    }
+    removeChildern(document.getElementById("mainBody"));
+
     var ticTacToeBoxTable = document.createElement("table");
     for (var row = 0; row < 9; row += 3) {
         var tableRow = document.createElement("tr");
@@ -41,13 +39,24 @@ function displayTicTacToeBox(ticTacToeBox, gameOver) {
         }
         ticTacToeBoxTable.appendChild(tableRow);
     }
+
     if (gameOver) {
-        document.getElementById("mainBody")
-            .appendChild(gameOverTextHtml());
-        document.getElementById("mainBody")
-           .appendChild(gameOverRefreshButtonHtml());
+        gameIsOver();
     }
     document.getElementById("mainBody").appendChild(ticTacToeBoxTable);
+}
+
+function gameIsOver() {
+    document.getElementById("mainBody")
+    .appendChild(gameOverTextHtml());
+    document.getElementById("mainBody")
+       .appendChild(gameOverRefreshButtonHtml());
+}
+
+function removeChildern(node) {
+    while (node.firstChild) {
+        node.removeChild(node.firstChild);
+    }
 }
 
 function gameOverTextHtml() {
