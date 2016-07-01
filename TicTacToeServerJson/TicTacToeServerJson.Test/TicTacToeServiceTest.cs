@@ -165,7 +165,7 @@ namespace TicTacToeServerJson.Test
             var statusCode = service.ProcessRequest(GetJsonData(),
                 new HttpResponse(zSocket), serverProperties);
             var example =
-                @"{ ""data"" : [""x"", ""x"", ""x"", ""-4-"", ""-5-"", ""-6-"", ""@"", ""@"", ""-9-""], ""GameOver"" : ""true""}";
+                @"{ ""data"" : [""x"", ""x"", ""x"", ""-4-"", ""-5-"", ""-6-"", ""@"", ""@"", ""-9-""], ""gameOver"" : ""true""}";
 
             zSocket.VerifySend(GetByte("HTTP/1.1 200 OK\r\n"),
                 GetByteCount("HTTP/1.1 200 OK\r\n"));
