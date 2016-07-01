@@ -1,18 +1,18 @@
 // WebSite/TicTacToe
 
 function displayWithNoButton(element) {
-    var tableItem = document.createElement("td");
+    const tableItem = document.createElement("td");
     tableItem.appendChild(document
         .createTextNode(element));
     return tableItem;
 }
 
 function displayWithButton(id, element) {
-    var tableItem = document.createElement("td");
-    var moveableSpace = document.createElement("button");
+    const tableItem = document.createElement("td");
+    const moveableSpace = document.createElement("button");
     moveableSpace.id = id;
     moveableSpace.addEventListener("click",
-        function () { playerChoose(this.id) })
+        function() { playerChoose(this.id) });
     moveableSpace.appendChild(document.createTextNode(element));
     tableItem.appendChild(moveableSpace);
     return tableItem;
@@ -21,19 +21,19 @@ function displayWithButton(id, element) {
 function outputBoxElement(index, element, GameOver) {
     if (element != "@" && element != "x" && !GameOver)
         return displayWithButton((index + 1),
-            element)
+            element);
     else
-        return displayWithNoButton(element)
+        return displayWithNoButton(element);
 }
 
 function displayTicTacToeBox(ticTacToeBox, gameOver) {
     removeChildern(document.getElementById("mainBody"));
 
-    var ticTacToeBoxTable = document.createElement("table");
+    const ticTacToeBoxTable = document.createElement("table");
     for (var row = 0; row < 9; row += 3) {
-        var tableRow = document.createElement("tr");
+        const tableRow = document.createElement("tr");
         for (var col = 0; col < 3; col++) {
-            var element = outputBoxElement((row + col),
+            const element = outputBoxElement((row + col),
                 ticTacToeBox[row + col], gameOver);
             tableRow.appendChild(element);
         }
@@ -60,16 +60,16 @@ function removeChildern(node) {
 }
 
 function gameOverTextHtml() {
-    var gameOverText = document.createElement("p");
+    const gameOverText = document.createElement("p");
     gameOverText.appendChild(document
         .createTextNode("Game Over"));
     return gameOverText;
 }
 
 function gameOverRefreshButtonHtml() {
-    var gameOverText = document.createElement("button");
+    const gameOverText = document.createElement("button");
     gameOverText.addEventListener("click",
-        function () { location.reload() })
+        function() { location.reload() });
     gameOverText.appendChild(document
         .createTextNode("Another Game?"));
     return gameOverText;
@@ -84,7 +84,7 @@ function generateTicTacToeJSON(ticTacToeBox, move) {
 
 function editPage(xhttp) {
     if (xhttp.readyState === 4 && xhttp.status === 200) {
-        var serviceResponse = JSON.parse(xhttp.responseText);
+        const serviceResponse = JSON.parse(xhttp.responseText);
         window.ticTacToeBox = serviceResponse.data;
         if (serviceResponse.GameOver == undefined)
             displayTicTacToeBox(serviceResponse.data, false);
