@@ -200,7 +200,7 @@ QUnit.test("Edit_Page_To_Show_New_TicTacToe_Board_Game_Over",
         var xhttp = new MockXMLHttpRequest();
         var Json = "{ \"data\" : [\"x\", \"x\","
             + " \"x\", \"-4-\", \"-5-\", \"-6-\", \"-7-\","
-            + " \"@\", \"@\"], \"GameOver\" : \"true\" }";
+            + " \"@\", \"@\"], \"gameOver\" : \"true\" }";
         xhttp.stubSetResponseText(Json);
         editPage(xhttp);
 

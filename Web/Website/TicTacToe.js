@@ -18,8 +18,8 @@ function displayWithButton(id, element) {
     return tableItem;
 }
 
-function outputBoxElement(index, element, GameOver) {
-    if (element != "@" && element != "x" && !GameOver)
+function outputBoxElement(index, element, gameOver) {
+    if (element != "@" && element != "x" && !gameOver)
         return displayWithButton((index + 1),
             element);
     else
@@ -86,7 +86,7 @@ function editPage(xhttp) {
     if (xhttp.readyState === 4 && xhttp.status === 200) {
         const serviceResponse = JSON.parse(xhttp.responseText);
         window.ticTacToeBox = serviceResponse.data;
-        if (serviceResponse.GameOver == undefined)
+        if (serviceResponse.gameOver == undefined)
             displayTicTacToeBox(serviceResponse.data, false);
         else 
             displayTicTacToeBox(serviceResponse.data, true);
