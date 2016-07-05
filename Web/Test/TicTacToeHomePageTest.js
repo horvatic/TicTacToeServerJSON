@@ -3,7 +3,7 @@ QUnit.test("StartPage", function (assert) {
     $.mockjax.clear();
     $.mockjax({
         url: "http://127.0.0.1:8080",
-        responseText: "{ \"data\" : [\"-1-\", \"-2-\", \"-3-\", \"-4-\", \"-5-\", \"-6-\", \"-7-\", \"-8-\", \"-9-\"]}"
+        responseText: "{ \"board\" : [\"-1-\", \"-2-\", \"-3-\", \"-4-\", \"-5-\", \"-6-\", \"-7-\", \"-8-\", \"-9-\"], \"gameOver\" : \"false\"}"
     });
     var ticTacToe = ["-1-", "-2-", "-3-", "-4-", "-5-", "-6-", 
         "-7-", "-8-", "-9-"];
@@ -45,7 +45,7 @@ QUnit.test("PlayerChoseMove", function (assert) {
     $.mockjax.clear();
     $.mockjax({
         url: "http://127.0.0.1:8080",
-        responseText: "{ \"data\" : [\"x\", \"@\", \"-3-\", \"-4-\", \"-5-\", \"-6-\", \"-7-\", \"-8-\", \"-9-\"]}"
+        responseText: "{ \"board\" : [\"x\", \"@\", \"-3-\", \"-4-\", \"-5-\", \"-6-\", \"-7-\", \"-8-\", \"-9-\"], \"gameOver\" : \"false\"}"
     });
     var ticTacToe = ["x", "@", "-3-", "-4-", "-5-", "-6-",
     "-7-", "-8-", "-9-"];
@@ -85,7 +85,7 @@ QUnit.test("PlayerChoseMoveGameOver", function (assert) {
     $.mockjax.clear();
     $.mockjax({
         url: "http://127.0.0.1:8080",
-        responseText: "{ \"data\" : [\"x\", \"x\", \"x\", \"-4-\", \"-5-\", \"-6-\", \"-7-\", \"@\", \"@\"], \"gameOver\" : \"true\"}"
+        responseText: "{ \"board\" : [\"x\", \"x\", \"x\", \"-4-\", \"-5-\", \"-6-\", \"-7-\", \"@\", \"@\"], \"gameOver\" : \"true\"}"
     });
     var ticTacToe = ["x", "x", "-3-", "-4-", "-5-", "-6-",
     "-7-", "@", "@"];
@@ -121,7 +121,7 @@ QUnit.test("PlayerChoseMoveGameOver", function (assert) {
 
 QUnit.module("Non Ajaxs")
 QUnit.test("Making_Of_JSON_To_Send_To_Server", function(assert) {
-    var example = "{\"data\":[\"-1-\",\"-2-\","
+    var example = "{\"board\":[\"-1-\",\"-2-\","
         + "\"-3-\",\"-4-\",\"-5-\",\"-6-\",\"-7-\","
         + "\"-8-\",\"-9-\"],\"move\":\"1\"}";
 

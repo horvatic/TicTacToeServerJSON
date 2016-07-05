@@ -1,6 +1,6 @@
 // WebSite/TicTacToe
 function makeTableElement(symbol, id, gameOver) {
-    if (symbol != "x" && symbol != "@" && gameOver == undefined)
+    if (symbol != "x" && symbol != "@" && gameOver == "false")
         return $("<td></td>").append
         ($("<button></button>").attr("id", id)
             .text(symbol)
@@ -34,14 +34,14 @@ function startPage() {
         contentType: "application/JSON"
     });
     $.getJSON("http://127.0.0.1:8080", function (json) {
-        window.ticTacToeData = json.data;
-        editPage(json.data, json.gameOver)
+        window.ticTacToeData = json.board;
+        editPage(json.board, json.gameOver)
     });
 }
 
 function generateTicTacToeJSON(ticTacToeBox, move) {
     return JSON.stringify({
-        "data": ticTacToeBox,
+        "board": ticTacToeBox,
         "move": move.toString()
     });
 }
@@ -51,7 +51,7 @@ function playerChooseMove(id) {
         generateTicTacToeJSON(window.ticTacToeData, id),
         function (json) {
             var gameData = JSON.parse(json);
-            window.ticTacToeData = gameData.data;
+            window.ticTacToeData = gameData.board;
             const gameOver = gameData.gameOver;
             editPage(window.ticTacToeData, gameOver)
         });

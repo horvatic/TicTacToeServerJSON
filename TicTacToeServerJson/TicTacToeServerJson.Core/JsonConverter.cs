@@ -28,7 +28,7 @@ namespace TicTacToeServerJson.Core
         public string SerializeTicTacToeBox
             (ITicTacToeBoxClass.ITicTacToeBox ticTacToeBox)
         {
-            var jSonTicTacToeBox = @"{ ""data"" : [";
+            var jSonTicTacToeBox = @"{ ""board"" : [";
             for (var i = 0; i < ticTacToeBox.cellCount(); i++)
             {
                 jSonTicTacToeBox += "\""
@@ -38,7 +38,7 @@ namespace TicTacToeServerJson.Core
             }
             jSonTicTacToeBox = jSonTicTacToeBox
                 .Substring(0, jSonTicTacToeBox.Length - 2)
-                               + "]}";
+                               + @"], ""gameOver"" : ""false""}";
             return jSonTicTacToeBox;
         }
 

@@ -108,10 +108,9 @@ namespace TicTacToeServerJson.Core
                     .SerializeTicTacToeBox(ticTacToeBox);
 
             if (GameOver(ticTacToeBox, game))
-            {
                 ticTacToeJson = ticTacToeJson
-                    .Replace("}", @", ""gameOver"" : ""true""}");
-            }
+                    .Replace(@"""gameOver"" : ""false""", 
+                    @"""gameOver"" : ""true""");
 
             SendData(ticTacToeJson, httpResponse);
 
