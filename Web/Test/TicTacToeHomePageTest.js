@@ -22,6 +22,19 @@ QUnit.test("Element with No Button", function (assert) {
 
 });
 
+QUnit.test("Game Over Refresh Button Html", function (assert) {
+
+    const gameOverText = document.createElement("button");
+    gameOverText.addEventListener("click",
+        function () { location.reload() });
+    gameOverText.appendChild(document
+        .createTextNode("Another Game?"));
+
+    assert.deepEqual(gameOverRefreshButtonHtml(),
+        gameOverText);
+
+});
+
 QUnit.test("Element with Button", function (assert) {
 
     var exampleHtml = document.createElement("td");
