@@ -23,8 +23,9 @@ function editPage(ticTacToeData, gameOver) {
     if (gameOver == "true") {
         $("#mainBody").append($("<p></p>").text("Game Over"));
         $("#mainBody").append($("<button></button>")
-            .text("Another Game?"))
-            .click(function() {location.reload()});
+            .text("Another Game?")
+            .attr("id", "refresh")
+            .click(function () { startPage() }));
     }
     $("#mainBody").append(ticTacToeTable);
 }
