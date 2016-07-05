@@ -1,3 +1,4 @@
+QUnit.module("mocking ajaxs")
 QUnit.test("StartPage", function (assert) {
     $.mockjax.clear();
     $.mockjax({
@@ -48,6 +49,7 @@ QUnit.test("PlayerChoseMove", function (assert) {
     });
     var ticTacToe = ["x", "@", "-3-", "-4-", "-5-", "-6-",
     "-7-", "-8-", "-9-"];
+    window.ticTacToeData = ticTacToe
     var exampleHtml =
       "<table><tbody>" +
       "<tr>" +
@@ -79,6 +81,45 @@ QUnit.test("PlayerChoseMove", function (assert) {
     }, 500);
 });
 
+QUnit.test("PlayerChoseMoveGameOver", function (assert) {
+    $.mockjax.clear();
+    $.mockjax({
+        url: "http://127.0.0.1:8080",
+        responseText: "{ \"data\" : [\"x\", \"x\", \"x\", \"-4-\", \"-5-\", \"-6-\", \"-7-\", \"@\", \"@\"], \"gameOver\" : \"true\"}"
+    });
+    var ticTacToe = ["x", "x", "-3-", "-4-", "-5-", "-6-",
+    "-7-", "@", "@"];
+    window.ticTacToeData = ticTacToe;
+    var exampleHtml =
+        "<p>Game Over</p>" +
+        "<button>Another Game?</button>" +
+        "<table><tbody>" +
+        "<tr>" +
+        "<td>x</td>" +
+        "<td>x</td>" +
+        "<td>x</td></tr><tr>" +
+        "<td>" +
+        "-4-</td>" +
+        "<td>" +
+        "-5-</td>" +
+        "<td>" +
+        "-6-</td></tr><tr>" +
+        "<td>" +
+        "-7-</td>" +
+        "<td>@</td>" +
+        "<td>@</td>"
+        + "</tr></tbody></table>";
+
+    var done = assert.async();
+    playerChooseMove(3);
+    setTimeout(function () {
+        assert.equal(document.getElementById('mainBody').innerHTML,
+        exampleHtml);
+        done();
+    }, 500);
+});
+
+QUnit.module("Non Ajaxs")
 QUnit.test("Making_Of_JSON_To_Send_To_Server", function(assert) {
     var example = "{\"data\":[\"-1-\",\"-2-\","
         + "\"-3-\",\"-4-\",\"-5-\",\"-6-\",\"-7-\","

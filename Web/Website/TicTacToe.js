@@ -1,10 +1,6 @@
 // WebSite/TicTacToe
-$(function () {
-
-});
-
-function makeTableElement(symbol, id) {
-    if (symbol != "x" && symbol != "@")
+function makeTableElement(symbol, id, gameOver) {
+    if (symbol != "x" && symbol != "@" && gameOver == undefined)
         return $("<td></td>").append
         ($("<button></button>").attr("id", id)
             .text(symbol)
@@ -13,16 +9,22 @@ function makeTableElement(symbol, id) {
         return $("<td></td>").text(symbol);
 }
 
-function editPage(ticTacToeData) {
+function editPage(ticTacToeData, gameOver) {
     $("#mainBody").empty();
     const ticTacToeTable = $("<table></table>");
     for (var row = 0; row < 9; row += 3) {
         const tableRow = $("<tr></tr>")
         for (var col = 0; col < 3; col++) {
             tableRow.append(makeTableElement(ticTacToeData[col + row],
-                col + row + 1));
+                col + row + 1, gameOver));
         }
         ticTacToeTable.append(tableRow)
+    }
+    if (gameOver == "true") {
+        $("#mainBody").append($("<p></p>").text("Game Over"));
+        $("#mainBody").append($("<button></button>")
+            .text("Another Game?"))
+            .click(function() {location.reload()});
     }
     $("#mainBody").append(ticTacToeTable);
 }
@@ -33,7 +35,7 @@ function startPage() {
     });
     $.getJSON("http://127.0.0.1:8080", function (json) {
         window.ticTacToeData = json.data;
-        editPage(json.data)
+        editPage(json.data, json.gameOver)
     });
 }
 
@@ -48,7 +50,9 @@ function playerChooseMove(id) {
     $.post("http://127.0.0.1:8080",
         generateTicTacToeJSON(window.ticTacToeData, id),
         function (json) {
-            window.ticTacToeData = JSON.parse(json).data;
-            editPage(window.ticTacToeData)
+            var gameData = JSON.parse(json);
+            window.ticTacToeData = gameData.data;
+            const gameOver = gameData.gameOver;
+            editPage(window.ticTacToeData, gameOver)
         });
 }
