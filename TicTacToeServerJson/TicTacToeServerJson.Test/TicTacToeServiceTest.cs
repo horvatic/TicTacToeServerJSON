@@ -110,7 +110,7 @@ namespace TicTacToeServerJson.Test
             var statusCode = service.ProcessRequest(GetJsonData(),
                 new HttpResponse(zSocket), serverProperties);
             var example =
-                @"{ ""data"" : [""x"", ""-2-"", ""-3-"", ""-4-"", ""-5-"", ""-6-"", ""-7-"", ""@"", ""-9-""]}";
+                @"{ ""board"" : [""x"", ""-2-"", ""-3-"", ""-4-"", ""-5-"", ""-6-"", ""-7-"", ""@"", ""-9-""], ""gameOver"" : ""false""}";
 
             zSocket.VerifySend(GetByte("HTTP/1.1 200 OK\r\n"),
                 GetByteCount("HTTP/1.1 200 OK\r\n"));
@@ -165,7 +165,7 @@ namespace TicTacToeServerJson.Test
             var statusCode = service.ProcessRequest(GetJsonData(),
                 new HttpResponse(zSocket), serverProperties);
             var example =
-                @"{ ""data"" : [""x"", ""x"", ""x"", ""-4-"", ""-5-"", ""-6-"", ""@"", ""@"", ""-9-""], ""gameOver"" : ""true""}";
+                @"{ ""board"" : [""x"", ""x"", ""x"", ""-4-"", ""-5-"", ""-6-"", ""@"", ""@"", ""-9-""], ""gameOver"" : ""true""}";
 
             zSocket.VerifySend(GetByte("HTTP/1.1 200 OK\r\n"),
                 GetByteCount("HTTP/1.1 200 OK\r\n"));
@@ -203,7 +203,7 @@ namespace TicTacToeServerJson.Test
                 service.ProcessRequest(GetRequestNoJson(),
                     new HttpResponse(zSocket), serverProperties);
             var example =
-                @"{ ""data"" : [""-1-"", ""-2-"", ""-3-"", ""-4-"", ""-5-"", ""-6-"", ""-7-"", ""-8-"", ""-9-""]}";
+                @"{ ""board"" : [""-1-"", ""-2-"", ""-3-"", ""-4-"", ""-5-"", ""-6-"", ""-7-"", ""-8-"", ""-9-""], ""gameOver"" : ""false""}";
 
 
             zSocket.VerifySend(GetByte("HTTP/1.1 200 OK\r\n"),
@@ -267,7 +267,7 @@ namespace TicTacToeServerJson.Test
         Connection: keep-alive
 
         {
-        	""data"": [""-1-"", ""-2-"", ""-3-"", ""-4-"", ""-5-"", ""-6-"", ""-7-"", ""-8-"", ""-9-""], ""move"" : ""1""
+        	""board"": [""-1-"", ""-2-"", ""-3-"", ""-4-"", ""-5-"", ""-6-"", ""-7-"", ""-8-"", ""-9-""], ""move"" : ""1""
         }";
         }
 

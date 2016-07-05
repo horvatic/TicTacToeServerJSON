@@ -44,7 +44,7 @@ namespace TicTacToeServerJson.Test
                 new TicTacToeBoxClass
                     .TicTacToeBox(Game.makeTicTacToeBox(3));
             var example =
-                @"{ ""data"" : [""-1-"", ""-2-"", ""-3-"", ""-4-"", ""-5-"", ""-6-"", ""-7-"", ""-8-"", ""-9-""]}";
+                @"{ ""board"" : [""-1-"", ""-2-"", ""-3-"", ""-4-"", ""-5-"", ""-6-"", ""-7-"", ""-8-"", ""-9-""], ""gameOver"" : ""false""}";
             var converter = new JsonConverter();
             var serialize = converter.SerializeTicTacToeBox(ticTacToeBox);
             Assert.Equal(example, serialize);
@@ -63,7 +63,7 @@ namespace TicTacToeServerJson.Test
         {
             return
                 @"{
-	""data"": [""-1-"", ""x"", ""x"", ""x"", ""x"", ""x"", ""x"", ""x"", ""-9-""], ""move"" : ""1""
+	""board"": [""-1-"", ""x"", ""x"", ""x"", ""x"", ""x"", ""x"", ""x"", ""-9-""], ""move"" : ""1""
 }";
         }
     }

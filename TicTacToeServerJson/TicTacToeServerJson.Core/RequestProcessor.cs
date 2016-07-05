@@ -26,7 +26,7 @@ namespace TicTacToeServerJson.Core
             IHttpResponse httpResponse)
         {
             var concatRequest = request;
-            if (!request.Contains(@"""data"""))
+            if (!request.Contains(@"""board"""))
                 concatRequest += handler.Receive();
             return ProcessRequest(concatRequest, handler,
                 service, properties, httpResponse);
