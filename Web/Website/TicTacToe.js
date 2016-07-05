@@ -1,42 +1,78 @@
 // WebSite/TicTacToe
-function makeTableElement(symbol, id, gameOver) {
-    if (symbol != "x" && symbol != "@" && gameOver == "false")
-        return $("<td></td>").append
-        ($("<button></button>").attr("id", id)
-            .text(symbol)
-            .click(function() { playerChooseMove(this.id) }));
+
+function displayWithNoButton(element) {
+    const tableItem = document.createElement("td");
+    tableItem.appendChild(document
+        .createTextNode(element));
+    return tableItem;
+}
+
+function displayWithButton(id, element) {
+    const tableItem = document.createElement("td");
+    const moveableSpace = document.createElement("button");
+    moveableSpace.id = id;
+    moveableSpace.addEventListener("click",
+        function() { playerChoose(this.id) });
+    moveableSpace.appendChild(document.createTextNode(element));
+    tableItem.appendChild(moveableSpace);
+    return tableItem;
+}
+
+function outputBoxElement(index, element, gameOver) {
+    if (element != "@" && element != "x" && !gameOver)
+        return displayWithButton((index + 1),
+            element);
     else
-        return $("<td></td>").text(symbol);
+        return displayWithNoButton(element);
 }
 
-function editPage(ticTacToeData, gameOver) {
-    $("#mainBody").empty();
-    const ticTacToeTable = $("<table></table>");
+function displayTicTacToeBox(ticTacToeBox, gameOver) {
+    removeChildern(document.getElementById("mainBody"));
+
+    const ticTacToeBoxTable = document.createElement("table");
     for (var row = 0; row < 9; row += 3) {
-        const tableRow = $("<tr></tr>")
+        const tableRow = document.createElement("tr");
         for (var col = 0; col < 3; col++) {
-            tableRow.append(makeTableElement(ticTacToeData[col + row],
-                col + row + 1, gameOver));
+            const element = outputBoxElement((row + col),
+                ticTacToeBox[row + col], gameOver);
+            tableRow.appendChild(element);
         }
-        ticTacToeTable.append(tableRow)
+        ticTacToeBoxTable.appendChild(tableRow);
     }
-    if (gameOver == "true") {
-        $("#mainBody").append($("<p></p>").text("Game Over"));
-        $("#mainBody").append($("<button></button>")
-            .text("Another Game?"))
-            .click(function() {location.reload()});
+
+    if (gameOver) {
+        gameIsOver();
     }
-    $("#mainBody").append(ticTacToeTable);
+    document.getElementById("mainBody").appendChild(ticTacToeBoxTable);
 }
 
-function startPage() {
-    $.ajaxSetup({
-        contentType: "application/JSON"
-    });
-    $.getJSON("http://127.0.0.1:8080", function (json) {
-        window.ticTacToeData = json.board;
-        editPage(json.board, json.gameOver)
-    });
+function gameIsOver() {
+    document.getElementById("mainBody")
+    .appendChild(gameOverTextHtml());
+    document.getElementById("mainBody")
+       .appendChild(gameOverRefreshButtonHtml());
+}
+
+function removeChildern(node) {
+    while (node.firstChild) {
+        node.removeChild(node.firstChild);
+    }
+}
+
+function gameOverTextHtml() {
+    const gameOverText = document.createElement("p");
+    gameOverText.appendChild(document
+        .createTextNode("Game Over"));
+    return gameOverText;
+}
+
+function gameOverRefreshButtonHtml() {
+    const gameOverText = document.createElement("button");
+    gameOverText.addEventListener("click",
+        function() { location.reload() });
+    gameOverText.appendChild(document
+        .createTextNode("Another Game?"));
+    return gameOverText;
 }
 
 function generateTicTacToeJSON(ticTacToeBox, move) {
@@ -46,13 +82,29 @@ function generateTicTacToeJSON(ticTacToeBox, move) {
     });
 }
 
-function playerChooseMove(id) {
-    $.post("http://127.0.0.1:8080",
-        generateTicTacToeJSON(window.ticTacToeData, id),
-        function (json) {
-            var gameData = JSON.parse(json);
-            window.ticTacToeData = gameData.board;
-            const gameOver = gameData.gameOver;
-            editPage(window.ticTacToeData, gameOver)
-        });
+function editPage(xhttp) {
+    if (xhttp.readyState === 4 && xhttp.status === 200) {
+        const serviceResponse = JSON.parse(xhttp.responseText);
+        window.ticTacToeBox = serviceResponse.board;
+        if (serviceResponse.gameOver == "false")
+            displayTicTacToeBox(serviceResponse.board, false);
+        else 
+            displayTicTacToeBox(serviceResponse.board, true);
+    }
+}
+
+function startPage(xhttp) {
+    xhttp.onreadystatechange = function () {
+        editPage(this);
+    };
+    window.xhttp = xhttp;
+    xhttp.open("GET", "http://127.0.0.1:8080", true);
+    xhttp.send();
+}
+
+function playerChoose(id) {
+    xhttp.open("POST", "http://127.0.0.1:8080", true);
+    xhttp.setRequestHeader("Content-Type",
+        "application/JSON");
+    xhttp.send(generateTicTacToeJSON(window.ticTacToeBox, id));
 }
