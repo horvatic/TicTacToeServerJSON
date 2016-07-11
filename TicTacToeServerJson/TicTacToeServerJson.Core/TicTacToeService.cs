@@ -26,7 +26,7 @@ namespace TicTacToeServerJson.Core
             IHttpResponse httpResponse,
             ServerProperties serverProperties)
         {
-            if (request.Contains("OPTIONS / HTTP/1.1")
+            if ((request.Contains("OPTIONS / HTTP/1.1") || request.Contains("OPTIONS / HTTP/1.0"))
                 && request.Substring(0, request.IndexOf("\r\n",
                     StringComparison.Ordinal))
                 == "OPTIONS / HTTP/1.1")
@@ -34,7 +34,9 @@ namespace TicTacToeServerJson.Core
                 return ProcessOptions(httpResponse);
             }
 
-            if (request.Contains("Content-Type: application/JSON"))
+            if ((request.ToLower().Contains("content-type: application/json")
+                || request.ToLower().Contains("accept: application/json")) &&
+                request.Substring(0, 4) == "POST")
                 return ProcessRequestWithJson(
                     request,
                     httpResponse,
@@ -109,7 +111,7 @@ namespace TicTacToeServerJson.Core
 
             if (GameOver(ticTacToeBox, game))
                 ticTacToeJson = ticTacToeJson
-                    .Replace(@"""gameOver"" : ""false""", 
+                    .Replace(@"""gameOver"" : ""false""",
                     @"""gameOver"" : ""true""");
 
             SendData(ticTacToeJson, httpResponse);
@@ -117,7 +119,7 @@ namespace TicTacToeServerJson.Core
             return "200 OK";
         }
 
-        private void SendData(string ticTacToeBox, 
+        private void SendData(string ticTacToeBox,
             IHttpResponse httpResponse)
         {
             httpResponse.SendHeaders(new List<string>
@@ -140,7 +142,7 @@ namespace TicTacToeServerJson.Core
                 .checkForWinnerOrTie(ticTacToeBox,
                     game.Setting.playerGlyph,
                     game.Setting.aIGlyph)
-                   != (int) GameStatusCodes.GenResult.NoWinner;
+                   != (int)GameStatusCodes.GenResult.NoWinner;
         }
 
         private string CleanRequest(string request)
@@ -175,4 +177,3 @@ namespace TicTacToeServerJson.Core
         }
     }
 }
-
