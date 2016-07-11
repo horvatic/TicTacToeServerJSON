@@ -132,6 +132,60 @@ namespace TicTacToeServerJson.Test
                 GetByteCount("Access-Control-Allow-Origin: *\r\n"));
             Assert.Equal("200 OK", statusCode);
         }
+        [Fact]
+        public void Process_Request_Send_Json_AngJs()
+        {
+            var zSocket = new MockZSocket();
+            var ticTacToeBox = new List<string>
+            {
+                "x",
+                "-2-",
+                "-3-",
+                "-4-",
+                "-5-",
+                "-6-",
+                "-7-",
+                "@",
+                "-9-"
+            };
+
+            var mockAi = new MockAi()
+                .StubMove(
+                    new TicTacToeBoxClass.TicTacToeBox(
+                        ListModule.OfSeq(ticTacToeBox)));
+
+            var service = new TicTacToeService();
+            var serverProperties = new ServerProperties(null,
+                5555, new ServerTime(),
+                new MockPrinter(),
+                new ServiceDependents(new JsonConverter(),
+                    new TicTacToeGame(new User(), mockAi,
+                        MakeSettings())));
+            var statusCode = service.ProcessRequest(GetJsonDataAngJs(),
+                new HttpResponse(zSocket), serverProperties);
+            var example =
+                @"{ ""board"" : [""x"", ""-2-"", ""-3-"", ""-4-"", ""-5-"", ""-6-"", ""-7-"", ""@"", ""-9-""], ""gameOver"" : ""false""}";
+
+            zSocket.VerifySend(GetByte("HTTP/1.1 200 OK\r\n"),
+                GetByteCount("HTTP/1.1 200 OK\r\n"));
+
+            zSocket.VerifySend(GetByte(example),
+                GetByteCount(example));
+
+            zSocket.VerifySend(GetByte("Content-Length: "
+                                       + GetByteCount(example)
+                                       + "\r\n\r\n"),
+                GetByteCount("Content-Length: "
+                             + GetByteCount(example)
+                             + "\r\n\r\n"));
+
+            zSocket.VerifySend(GetByte("Content-Type: application/JSON\r\n"),
+                GetByteCount("Content-Type: application/JSON\r\n"));
+
+            zSocket.VerifySend(GetByte("Access-Control-Allow-Origin: *\r\n"),
+                GetByteCount("Access-Control-Allow-Origin: *\r\n"));
+            Assert.Equal("200 OK", statusCode);
+        }
 
         [Fact]
         public void Process_Request_Send_Json_Game_Over()
@@ -233,7 +287,7 @@ namespace TicTacToeServerJson.Test
         private static GameSettings.gameSetting MakeSettings()
         {
             return new GameSettings.gameSetting(3, "x", "@"
-                , (int) PlayerValues.playerVals.Human
+                , (int)PlayerValues.playerVals.Human
                 , false, false, false);
         }
 
@@ -265,7 +319,22 @@ namespace TicTacToeServerJson.Test
         Content-Type: application/JSON
         Content-Length: 76
         Connection: keep-alive
+        {
+        	""board"": [""-1-"", ""-2-"", ""-3-"", ""-4-"", ""-5-"", ""-6-"", ""-7-"", ""-8-"", ""-9-""], ""move"" : ""1""
+        }";
+        }
 
+        private string GetJsonDataAngJs()
+        {
+            return
+                @"POST / HTTP/1.1
+        Host: localhost:8080
+        User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:46.0) Gecko/20100101 Firefox/46.0
+        Accept: application/json, text/html
+        Accept-Language: en-US,en;q=0.5
+        Accept-Encoding: gzip, deflate
+        Content-Length: 76
+        Connection: keep-alive
         {
         	""board"": [""-1-"", ""-2-"", ""-3-"", ""-4-"", ""-5-"", ""-6-"", ""-7-"", ""-8-"", ""-9-""], ""move"" : ""1""
         }";
@@ -282,7 +351,6 @@ namespace TicTacToeServerJson.Test
         Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8
         Accept-Encoding: gzip, deflate, sdch
         Accept-Language: en-US,en;q=0.8
-
         ";
         }
 
