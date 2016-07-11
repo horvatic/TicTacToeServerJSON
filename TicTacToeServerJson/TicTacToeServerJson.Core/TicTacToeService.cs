@@ -26,7 +26,7 @@ namespace TicTacToeServerJson.Core
             IHttpResponse httpResponse,
             ServerProperties serverProperties)
         {
-            if (request.Contains("OPTIONS / HTTP/1.1")
+            if ((request.Contains("OPTIONS / HTTP/1.1") || request.Contains("OPTIONS / HTTP/1.0"))
                 && request.Substring(0, request.IndexOf("\r\n",
                     StringComparison.Ordinal))
                 == "OPTIONS / HTTP/1.1")
@@ -34,7 +34,9 @@ namespace TicTacToeServerJson.Core
                 return ProcessOptions(httpResponse);
             }
 
-            if (request.Contains("Content-Type: application/JSON"))
+            if ((request.ToLower().Contains("content-type: application/json")
+                || request.ToLower().Contains("accept: application/json")) &&
+                request.Substring(0, 4) == "POST")
                 return ProcessRequestWithJson(
                     request,
                     httpResponse,

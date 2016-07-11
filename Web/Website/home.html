@@ -2,15 +2,22 @@
 <html>
 <head lang="en-US">
     <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
-    <script src="ticTacToeStart.controller.js"></script>
+    <script src="ticTacToe.controller.js"></script>
     <title>Vatic TicTacToe</title>
 </head>
 <body>
-<div ng-app="ticTacToeApp" ng-controller="ticTacToeStartController">
+<div ng-app="ticTacToeApp" ng-controller="ticTacToeController">
     <table>
         <tr ng-repeat="row in board">
-            <td ng-repeat="col in row track by $index">
-                <button>{{ col }}</button>
+            <td ng-repeat="col in row">
+                <button ng-if="col != 'x' && col != '@'"
+                        ng-click="makeMove($parent.$index + ($parent.$parent.$index * 3) + 1)">
+                    {{ col }}
+                </button>
+                <p ng-if="col == 'x' || col == '@'">
+                    {{ col }}
+                </p>
+            </td>
         </tr>
     </table>
 
