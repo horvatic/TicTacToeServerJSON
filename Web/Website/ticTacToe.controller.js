@@ -4,6 +4,7 @@ angular.module('ticTacToeApp', [])
             .then(function (response) {
                 $scope.board = [];
                 setTicTacToeBoard($scope, response.data.board);
+                $scope.gameOver = response.data.gameOver;
             });
 
         $scope.makeMove = function (id) {
@@ -17,6 +18,7 @@ angular.module('ticTacToeApp', [])
            .then(function (response) {
                $scope.board = [];
                setTicTacToeBoard($scope, response.data.board);
+               $scope.gameOver = response.data.gameOver;
            });
         }
     });

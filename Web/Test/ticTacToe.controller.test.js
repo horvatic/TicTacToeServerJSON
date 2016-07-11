@@ -9,9 +9,15 @@ describe('ticTacToeApp', function () {
         $httpBackend = $injector.get('$httpBackend');
         // backend definition common for all tests
         authRequestHandler = $httpBackend.when('GET', 'http://127.0.0.1:8080')
-                               .respond({ board: ["-1-", "-2-", "-3-", "-4-", "-5-", "-6-", "-7-", "-8-", "-9-"] });
+                               .respond({
+                                   board: ["-1-", "-2-", "-3-", "-4-", "-5-", "-6-", "-7-", "-8-", "-9-"],
+                                   gameOver: "false"
+                               });
         authRequestHandler = $httpBackend.when('POST', 'http://127.0.0.1:8080')
-                               .respond({ board: ["x", "@", "-3-", "-4-", "-5-", "-6-", "-7-", "-8-", "-9-"] });
+                               .respond({
+                                   board: ["x", "@", "-3-", "-4-", "-5-", "-6-", "-7-", "-8-", "-9-"],
+                                   gameOver: "true"
+                               });
     }));
 
     afterEach(function () {
@@ -26,6 +32,7 @@ describe('ticTacToeApp', function () {
             $controller('ticTacToeController', { $scope: $scope });
             $httpBackend.expectGET('http://127.0.0.1:8080');
             $httpBackend.flush();
+            expect($scope.gameOver).toEqual("false");
             expect($scope.board).toEqual([["-1-",
                 "-2-", "-3-"],
                 ["-4-", "-5-", "-6-"],
@@ -45,6 +52,7 @@ describe('ticTacToeApp', function () {
             $scope.makeMove(1);
             $httpBackend.expectPOST('http://127.0.0.1:8080');
             $httpBackend.flush();
+            expect($scope.gameOver).toEqual("true");
             expect($scope.board).toEqual([["x",
                 "@", "-3-"],
                 ["-4-", "-5-", "-6-"],

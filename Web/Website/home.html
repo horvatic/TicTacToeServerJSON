@@ -7,14 +7,16 @@
 </head>
 <body>
 <div ng-app="ticTacToeApp" ng-controller="ticTacToeController">
+    <p ng-if="gameOver == 'true'">Game Over</p>
+    <button ng-if="gameOver == 'true'" onClick="location.reload();" >Another Game</button>
     <table>
         <tr ng-repeat="row in board">
-            <td ng-repeat="col in row">
-                <button ng-if="col != 'x' && col != '@'"
+            <td ng-repeat="col in row track by $index">
+                <button ng-if="col != 'x' && col != '@' && gameOver == 'false'"
                         ng-click="makeMove($parent.$index + ($parent.$parent.$index * 3) + 1)">
                     {{ col }}
                 </button>
-                <p ng-if="col == 'x' || col == '@'">
+                <p ng-if="(col == 'x' || col == '@') || gameOver == 'true'">
                     {{ col }}
                 </p>
             </td>
