@@ -16,9 +16,9 @@
                         ng-click="makeMove($parent.$index + ($parent.$parent.$index * 3) + 1)">
                     {{ col }}
                 </button>
-                <p ng-if="(col == 'x' || col == '@') || gameOver == 'true'">
+                <div ng-if="(col == 'x' || col == '@') || gameOver == 'true'">
                     {{ col }}
-                </p>
+                </div>
             </td>
         </tr>
     </table>
